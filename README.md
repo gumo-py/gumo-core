@@ -40,8 +40,8 @@ if __name__ == '__main__':
 ## Setup Development Environment
 
 ```sh
-$ pyenv virtualenv 3.7.2 gumo-core
-$ pyenv local 3.7.2/envs/gumo-core
+$ git clone https://github.com/gumo-py/gumo-core.git
+$ cd gumo-core
 
 $ make setup
 ```
