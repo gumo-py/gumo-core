@@ -40,6 +40,6 @@ pip-compile:
 	pip3 install -r requirements.txt
 
 .PHONY: test
-test:
+test: build
 	pip3 install dist/${package_name}*.tar.gz
 	pytest -v tests/config.py tests
