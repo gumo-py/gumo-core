@@ -5,7 +5,8 @@
 ```sh
 $ pyenv virtualenv 3.7.2 gumo-core
 $ pyenv local 3.7.2/envs/gumo-core
-$ pip install -r requirements.txt
+
+$ make setup
 ```
 
 ## Test

@@ -2,7 +2,7 @@ import setuptools
 
 
 name = 'gumo-core'
-version = '0.0.7'
+version = '0.0.8'
 description = 'Gumo Core Library'
 dependencies = [
     'pyyaml >= 5.1',
@@ -17,8 +17,6 @@ packages = [
     if package.startswith('gumo')
 ]
 
-namespaces = ['gumo']
-
 setuptools.setup(
     name=name,
     version=version,
@@ -29,7 +27,6 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/gumo-py/gumo",
     packages=packages,
-    namespaces=namespaces,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

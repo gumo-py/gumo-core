@@ -1,5 +1,10 @@
 package_name = gumo-core
 
+.PHONY: setup
+setup:
+	pip install twine wheel pytest
+	pip install -r requirements.txt
+
 .PHONY: deploy
 deploy: clean build
 	python -m twine upload \
