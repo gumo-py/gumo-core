@@ -27,16 +27,17 @@ test-install:
 		${package_name}
 
 .PHONY: build
-build:
+build: pip-compile
 	python3 setup.py sdist bdist_wheel
 
 .PHONY: clean
 clean:
-	rm -rf ${package_name}.egg-info dist build
+	rm -rf $(subst -,_,${package_name}).egg-info dist build
 
 .PHONY: pip-compile
 pip-compile:
 	pip-compile --output-file requirements.txt requirements.in
+	pip3 install -r requirements.txt
 
 .PHONY: test
 test:
