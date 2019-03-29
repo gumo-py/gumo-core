@@ -7,6 +7,7 @@ from gumo.core.domain.configuration import GoogleCloudLocation
 from gumo.core.domain.configuration import GoogleCloudProjectID
 
 from gumo.core.domain.entity_key import EntityKey
+from gumo.core.domain.entity_key import NoneKey
 from gumo.core.domain.entity_key import EntityKeyFactory
 
 from gumo.core.infrastructure import MockAppEngineEnvironment
@@ -22,6 +23,7 @@ __all__ = [
     GoogleCloudProjectID.__name__,
 
     EntityKey.__name__,
+    NoneKey.__name__,
     EntityKeyFactory.__name__,
 
     MockAppEngineEnvironment.__name__,
