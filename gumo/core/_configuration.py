@@ -3,10 +3,10 @@ from logging import getLogger
 from typing import Optional
 
 from gumo.core.injector import injector
-from gumo.core.domain import GumoConfiguration
-from gumo.core.domain import GoogleCloudLocation
-from gumo.core.domain import GoogleCloudProjectID
-from gumo.core.domain import ApplicationPlatform
+from gumo.core.domain.configuration import GumoConfiguration
+from gumo.core.domain.configuration import GoogleCloudLocation
+from gumo.core.domain.configuration import GoogleCloudProjectID
+from gumo.core.domain.configuration import ApplicationPlatform
 from gumo.core.exceptions import ConfigurationError
 
 logger = getLogger('gumo.core')

@@ -1,10 +1,10 @@
 import pytest
 
 from gumo.core._configuration import ConfigurationFactory
-from gumo.core.domain import GumoConfiguration
-from gumo.core.domain import GoogleCloudLocation
-from gumo.core.domain import GoogleCloudProjectID
-from gumo.core.domain import ApplicationPlatform
+from gumo.core import GumoConfiguration
+from gumo.core import GoogleCloudLocation
+from gumo.core import GoogleCloudProjectID
+from gumo.core.domain.configuration import ApplicationPlatform
 
 
 def test_configuration_factory_build():

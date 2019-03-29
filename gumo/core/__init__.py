@@ -1,8 +1,8 @@
 from gumo.core._configuration import configure
 
-from gumo.core.domain import GumoConfiguration
-from gumo.core.domain import GoogleCloudLocation
-from gumo.core.domain import GoogleCloudProjectID
+from gumo.core.domain.configuration import GumoConfiguration
+from gumo.core.domain.configuration import GoogleCloudLocation
+from gumo.core.domain.configuration import GoogleCloudProjectID
 from gumo.core.exceptions import ConfigurationError
 
 from gumo.core.infrastructure import MockAppEngineEnvironment
