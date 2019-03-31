@@ -1,6 +1,7 @@
 import json
 import google.oauth2
 from google.cloud import storage
+from injector import inject
 
 from gumo.core.injector import injector
 from gumo.core.domain.configuration import GumoConfiguration
@@ -17,7 +18,7 @@ class CredentialManager:
         cls._credential = injector.get(cls).build_credential_from_storage()
         return cls._credential
 
-    @injector
+    @inject
     def __init__(
             self,
             gumo_configuration: GumoConfiguration,
