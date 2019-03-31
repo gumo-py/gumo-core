@@ -2,11 +2,13 @@ import setuptools
 
 
 name = 'gumo-core'
-version = '0.0.15'
+version = '0.0.16'
 description = 'Gumo Core Library'
 dependencies = [
     'pyyaml >= 5.1',
     'injector >= 0.13.1',
+    'google-cloud-storage >= 1.13.0',
+    'google-api-python-client >= 1.7.4'
 ]
 
 with open("README.md", "r") as fh:
