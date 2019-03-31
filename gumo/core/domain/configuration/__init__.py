@@ -1,6 +1,8 @@
 import dataclasses
 import enum
 
+from typing import Optional
+
 
 @dataclasses.dataclass(frozen=True)
 class GoogleCloudProjectID:
@@ -64,7 +66,47 @@ class ApplicationPlatform(enum.Enum):
 
 
 @dataclasses.dataclass(frozen=True)
+class ServiceAccountCredentialConfig:
+    enabled: bool
+    bucket_name: Optional[str] = None
+    blob_path: Optional[str] = None
+
+    def __post_init__(self):
+        if not self.enabled:
+            return
+
+        if not isinstance(self.bucket_name, str):
+            raise ValueError(f'bucket_name must be a string, expect: {type(self.bucket_name)}')
+
+        if not isinstance(self.blob_path, str):
+            raise ValueError(f'blob_path must be a string, expect: {type(self.blob_path)}')
+
+
+@dataclasses.dataclass(frozen=True)
+class ServiceAccountCredentialPath:
+    value: Optional[str] = None
+
+    def __post_init__(self):
+        if isinstance(self.value, str) and not self.value.startswith('gs://'):
+            raise ValueError(f'{self.__class__.__name__} must be starts with gs://')
+
+    def credential_config(self) -> ServiceAccountCredentialConfig:
+        if not isinstance(self.value, str):
+            return ServiceAccountCredentialConfig(
+                enabled=False
+            )
+
+        _, _, bucket_name, blob_path = self.value.split('/', 3)
+        return ServiceAccountCredentialConfig(
+            enabled=True,
+            bucket_name=bucket_name,
+            blob_path=f'/{blob_path}',
+        )
+
+
+@dataclasses.dataclass(frozen=True)
 class GumoConfiguration:
     google_cloud_project: GoogleCloudProjectID
     google_cloud_location: GoogleCloudLocation
     application_platform: ApplicationPlatform
+    service_account_credential_config: ServiceAccountCredentialConfig
