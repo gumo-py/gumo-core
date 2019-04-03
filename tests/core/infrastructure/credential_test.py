@@ -1,19 +1,19 @@
 from gumo.core.injector import injector
-from gumo.core.infrastructure.credential import CredentialManager
+from gumo.core.infrastructure.credential import GoogleOAuthCredentialManager
 from gumo.core.domain.configuration import ServiceAccountCredentialConfig
 from gumo.core.exceptions import ServiceAccountConfigurationError
 from google.oauth2.service_account import Credentials
 
 
 def test_credential_manager():
-    o = injector.get(CredentialManager)  # type: CredentialManager
-    assert isinstance(o, CredentialManager)
+    o = injector.get(GoogleOAuthCredentialManager)  # type: GoogleOAuthCredentialManager
+    assert isinstance(o, GoogleOAuthCredentialManager)
     assert isinstance(o._credential_config, ServiceAccountCredentialConfig)
 
 
 def test_credential():
     try:
-        cred = CredentialManager.get_credential()
+        cred = GoogleOAuthCredentialManager.get_credential()
     except ServiceAccountConfigurationError as e:
         print(f'ServiceAccountConfigurationError: {e}')
         print('Test skipped.')

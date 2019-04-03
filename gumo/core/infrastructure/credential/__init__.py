@@ -9,7 +9,7 @@ from gumo.core.injector import injector
 from gumo.core.domain.configuration import GumoConfiguration
 
 
-class CredentialManager:
+class GoogleOAuthCredentialManager:
     _credential = None
 
     @classmethod
@@ -68,5 +68,5 @@ class CredentialManager:
         return json.loads(content)
 
 
-def get_credential() -> Credentials:
-    return CredentialManager.get_credential()
+def get_google_oauth_credential() -> Credentials:
+    return GoogleOAuthCredentialManager.get_credential()
