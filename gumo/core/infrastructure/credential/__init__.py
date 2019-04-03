@@ -1,8 +1,10 @@
+import os
 import json
-import google.oauth2
+from google.oauth2.service_account import Credentials
 from google.cloud import storage
 from injector import inject
 
+from gumo.core.exceptions import ServiceAccountConfigurationError
 from gumo.core.injector import injector
 from gumo.core.domain.configuration import GumoConfiguration
 
@@ -11,11 +13,11 @@ class CredentialManager:
     _credential = None
 
     @classmethod
-    def get_credential(cls):
+    def get_credential(cls) -> Credentials:
         if cls._credential:
             return cls._credential
 
-        cls._credential = injector.get(cls).build_credential_from_storage()
+        cls._credential = injector.get(cls).build_credential()
         return cls._credential
 
     @inject
@@ -26,15 +28,27 @@ class CredentialManager:
         self._gumo_configuration = gumo_configuration
         self._credential_config = self._gumo_configuration.service_account_credential_config
 
-    def build_credential_from_storage(self):
-        if not self._credential_config.enabled:
-            raise RuntimeError(f'ServiceAccount Credential Config disabled.')
+    def build_credential(self) -> Credentials:
+        info = None
 
-        return google.oauth2.service_account.Credentials.from_service_account_info(
-            info=self._get_content()
+        try:
+            if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+                info = self._get_content_from_local()
+            elif self._credential_config.enabled:
+                info = self._get_content_from_storage()
+        except ServiceAccountConfigurationError:
+            raise
+        except RuntimeError as e:
+            raise ServiceAccountConfigurationError(e)
+
+        if info is None:
+            raise ServiceAccountConfigurationError(f'ServiceAccount Credential Config disabled.')
+
+        return Credentials.from_service_account_info(
+            info=info
         )
 
-    def _get_content(self):
+    def _get_content_from_storage(self):
         storage_client = storage.Client()
         bucket = storage_client.get_bucket(bucket_name=self._credential_config.bucket_name)
         blob = bucket.blob(blob_name=self._credential_config.blob_path)
@@ -42,6 +56,17 @@ class CredentialManager:
 
         return json.loads(content)
 
+    def _get_content_from_local(self):
+        credential_path = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
 
-def get_credential():
+        if not os.path.exists(credential_path):
+            raise ServiceAccountConfigurationError(f'GOOGLE_APPLICATION_CREDENTIALS={credential_path} is not found.')
+
+        with open(credential_path, 'r') as f:
+            content = f.read()
+
+        return json.loads(content)
+
+
+def get_credential() -> Credentials:
     return CredentialManager.get_credential()
