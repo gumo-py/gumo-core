@@ -6,5 +6,9 @@ class ConfigurationError(GumoBaseError):
     pass
 
 
+class ServiceAccountConfigurationError(ConfigurationError):
+    pass
+
+
 class ObjectNotoFoundError(GumoBaseError):
     pass

@@ -11,6 +11,7 @@ from gumo.core.domain.entity_key import NoneKey
 from gumo.core.domain.entity_key import EntityKeyFactory
 
 from gumo.core.infrastructure import MockAppEngineEnvironment
+from gumo.core.infrastructure.credential import get_google_oauth_credential
 
 
 __all__ = [
@@ -27,4 +28,5 @@ __all__ = [
     EntityKeyFactory.__name__,
 
     MockAppEngineEnvironment.__name__,
+    get_google_oauth_credential.__name__,
 ]
