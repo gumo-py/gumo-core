@@ -100,7 +100,7 @@ class ServiceAccountCredentialPath:
         return ServiceAccountCredentialConfig(
             enabled=True,
             bucket_name=bucket_name,
-            blob_path=f'/{blob_path}',
+            blob_path=blob_path,
         )
 
 
