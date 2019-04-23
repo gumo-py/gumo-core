@@ -32,10 +32,10 @@ class GoogleOAuthCredentialManager:
         info = None
 
         try:
-            if os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
-                info = self._get_content_from_local()
-            elif self._credential_config.enabled:
+            if self._credential_config.enabled:
                 info = self._get_content_from_storage()
+            elif os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+                info = self._get_content_from_local()
         except ServiceAccountConfigurationError:
             raise
         except RuntimeError as e:
