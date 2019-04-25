@@ -112,18 +112,31 @@ class EntityKey(_BaseKey):
     def name(self):
         return self._pairs[-1].name
 
-    def key_literal(self):
+    def key_literal(self) -> str:
         return 'Key({})'.format(', '.join([
             f"'{i}'" for i in self.flat_pairs()
         ]))
 
-    def key_path(self):
+    def key_path(self) -> str:
+        """
+        Returns a structured key separated by `/`
+        The kind and name are separated by `:`
+        """
         pairs = []
         for pair in self.pairs():
             pairs.append(f'{pair.kind}:{pair.name}')
         return '/'.join(pairs)
 
-    def key_path_urlsafe(self):
+    def key_url(self) -> str:
+        """
+        Returns a structured key separated by / between kind and name.
+        This format is suitable for expressing in a form embedded in a URL.
+        """
+        return '/'.join([
+            f'{pair.kind}/{pair.name}' for pair in self.pairs()
+        ])
+
+    def key_path_urlsafe(self) -> str:
         return self.key_path().replace('/', '%2F').replace(':', '%3A')
 
 
@@ -166,5 +179,27 @@ class EntityKeyFactory:
         for pair in key_path.replace('%2F', '/').replace('%3A', ':').split('/'):
             kind, name = pair.split(':')
             pairs.append(KeyPair(kind=kind, name=name))
+
+        return EntityKey(pairs)
+
+    @staticmethod
+    def _split_list(l, n):
+        """
+        list divided by n items.
+        :param l: list
+        :param n: item size of sub-list
+        :return:
+        """
+        for idx in range(0, len(l), n):
+            yield l[idx:idx + n]
+
+    def build_from_key_url(self, key_url: str) -> EntityKey:
+        pairs = []
+
+        key_elements = key_url.replace('%2F', '/').split('/')
+        key_pairs = list(self._split_list(key_elements, 2))
+
+        for pair in key_pairs:
+            pairs.append(KeyPair(kind=pair[0], name=pair[1]))
 
         return EntityKey(pairs)

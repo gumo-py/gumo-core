@@ -86,6 +86,18 @@ def test_entity_key_path():
     assert factory.build_from_key_path(child.key_path_urlsafe()) == child
 
 
+def test_entity_key_url():
+    factory = EntityKeyFactory()
+    key = factory.build(kind='Book', name='name')
+    child = factory.build(kind='Comment', name='comment', parent=key)
+
+    assert key.key_url() == 'Book/name'
+    assert child.key_url() == 'Book/name/Comment/comment'
+
+    assert factory.build_from_key_url(key.key_url()) == key
+    assert factory.build_from_key_url(child.key_url()) == child
+
+
 def test_none_key_eq():
     key1 = NoneKey()
     key2 = NoneKey()

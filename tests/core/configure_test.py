@@ -44,6 +44,6 @@ def test_configuration_with_credential_config():
         service_account_credential_config=ServiceAccountCredentialConfig(
             enabled=True,
             bucket_name='sample-bucket',
-            blob_path='/credential.json'
+            blob_path='credential.json'
         ),
     )
