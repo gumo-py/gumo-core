@@ -1,5 +1,7 @@
 # gumo-core
 
+[![CircleCI](https://circleci.com/gh/gumo-py/gumo-core.svg?style=svg)](https://circleci.com/gh/gumo-py/gumo-core)
+
 ## Configuration
 
 ```python

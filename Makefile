@@ -42,4 +42,4 @@ pip-compile:
 .PHONY: test
 test: build
 	pip3 install dist/${package_name}*.tar.gz
-	pytest -v tests/config.py tests
+	pytest -v --junit-xml=test-reports/results.xml tests/config.py tests
