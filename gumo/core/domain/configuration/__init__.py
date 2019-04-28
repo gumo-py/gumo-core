@@ -82,6 +82,7 @@ class ServiceAccountCredentialConfig:
             raise ValueError(f'blob_path must be a string, expect: {type(self.blob_path)}')
 
 
+# will be deprecated.
 @dataclasses.dataclass(frozen=True)
 class ServiceAccountCredentialPath:
     value: Optional[str] = None
@@ -109,7 +110,7 @@ class GumoConfiguration:
     google_cloud_project: GoogleCloudProjectID
     google_cloud_location: GoogleCloudLocation
     application_platform: ApplicationPlatform
-    service_account_credential_config: ServiceAccountCredentialConfig
+    service_account_credential_config: ServiceAccountCredentialConfig  # will be deprecated
 
     @property
     def is_local(self) -> bool:
