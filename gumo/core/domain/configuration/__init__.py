@@ -110,3 +110,11 @@ class GumoConfiguration:
     google_cloud_location: GoogleCloudLocation
     application_platform: ApplicationPlatform
     service_account_credential_config: ServiceAccountCredentialConfig
+
+    @property
+    def is_local(self) -> bool:
+        return self.application_platform.value == self.application_platform.Local
+
+    @property
+    def is_google_app_engine(self) -> bool:
+        return self.application_platform.value == self.application_platform.GoogleAppEngine
