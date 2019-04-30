@@ -1,6 +1,10 @@
 import os
 import json
-from google.oauth2.service_account import Credentials
+
+from google.oauth2 import credentials
+from google.oauth2 import service_account
+from google.auth import compute_engine
+
 from google.cloud import storage
 from injector import inject
 
@@ -13,7 +17,7 @@ class GoogleOAuthCredentialManager:
     _credential = None
 
     @classmethod
-    def get_credential(cls) -> Credentials:
+    def get_credential(cls) -> credentials.Credentials:
         if cls._credential:
             return cls._credential
 
@@ -28,25 +32,30 @@ class GoogleOAuthCredentialManager:
         self._gumo_configuration = gumo_configuration
         self._credential_config = self._gumo_configuration.service_account_credential_config
 
-    def build_credential(self) -> Credentials:
-        info = None
+    def build_credential(self) -> credentials.Credentials:
+        _credentials = None
 
         try:
-            if self._credential_config.enabled:
-                info = self._get_content_from_storage()
-            elif os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
-                info = self._get_content_from_local()
+            if self._gumo_configuration.is_google_app_engine:
+                _credentials = compute_engine.Credentials()
+            elif 'GOOGLE_APPLICATION_CREDENTIALS' in os.environ:
+                _credentials = service_account.Credentials.from_service_account_info(
+                    info=self._get_content_from_local()
+                )
+            elif self._credential_config.enabled:
+                # will be deprecated.
+                _credentials = service_account.Credentials.from_service_account_info(
+                    info=self._get_content_from_storage()
+                )
         except ServiceAccountConfigurationError:
             raise
         except RuntimeError as e:
             raise ServiceAccountConfigurationError(e)
 
-        if info is None:
+        if _credentials is None:
             raise ServiceAccountConfigurationError(f'ServiceAccount Credential Config disabled.')
 
-        return Credentials.from_service_account_info(
-            info=info
-        )
+        return _credentials
 
     def _get_content_from_storage(self):
         storage_client = storage.Client()
@@ -68,5 +77,5 @@ class GoogleOAuthCredentialManager:
         return json.loads(content)
 
 
-def get_google_oauth_credential() -> Credentials:
+def get_google_oauth_credential() -> credentials.Credentials:
     return GoogleOAuthCredentialManager.get_credential()
