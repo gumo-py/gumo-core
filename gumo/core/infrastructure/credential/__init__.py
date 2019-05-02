@@ -84,6 +84,8 @@ class GoogleOAuthCredentialManager:
                     token_uri=token_uri if token_uri else DEFAULT_TOKEN_URI,
                     target_audience=target_audience,
                 )
+                if with_refresh:
+                    _id_token_credential.refresh(request=request)
         except ServiceAccountConfigurationError:
             raise
         except RuntimeError as e:
