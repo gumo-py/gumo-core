@@ -114,8 +114,8 @@ class GumoConfiguration:
 
     @property
     def is_local(self) -> bool:
-        return self.application_platform.value == self.application_platform.Local
+        return self.application_platform == self.application_platform.Local
 
     @property
     def is_google_app_engine(self) -> bool:
-        return self.application_platform.value == self.application_platform.GoogleAppEngine
+        return self.application_platform == self.application_platform.GoogleAppEngine
