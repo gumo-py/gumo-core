@@ -118,5 +118,13 @@ def get_google_oauth_credential() -> Credentials:
     return injector.get(GoogleOAuthCredentialManager).build_credential()
 
 
-def get_google_id_token_credential() -> Tuple[IDTokenCredentials, Request]:
-    return injector.get(GoogleOAuthCredentialManager).build_id_token_credential()
+def get_google_id_token_credential(
+        target_audience: str,
+        with_refresh: bool = True,
+        token_uri: Optional[str] = None,
+) -> Tuple[IDTokenCredentials, Request]:
+    return injector.get(GoogleOAuthCredentialManager).build_id_token_credential(
+        target_audience=target_audience,
+        with_refresh=with_refresh,
+        token_uri=token_uri,
+    )
