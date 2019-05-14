@@ -13,7 +13,8 @@ def test_credential_manager():
 
 def test_credential():
     try:
-        cred = GoogleOAuthCredentialManager.get_credential()
+        manager = injector.get(GoogleOAuthCredentialManager)  # type: GoogleOAuthCredentialManager
+        cred = manager.build_credential()
     except ServiceAccountConfigurationError as e:
         print(f'ServiceAccountConfigurationError: {e}')
         print('Test skipped.')

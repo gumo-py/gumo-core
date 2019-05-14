@@ -36,7 +36,7 @@ clean:
 
 .PHONY: pip-compile
 pip-compile:
-	pip-compile --output-file requirements.txt requirements.in
+	pip-compile --output-file=requirements.txt requirements.in
 	pip3 install -r requirements.txt
 
 .PHONY: test
