@@ -5,11 +5,6 @@ from gumo.core.domain.entity_key import NoneKey
 from gumo.core.domain.entity_key import EntityKey
 from gumo.core.domain.entity_key import EntityKeyFactory
 
-sample_key_pairs__with_str_name = [
-    ('Book', 'name'),
-    ('BookComment', 'comment'),
-]
-
 
 class TestKeyPair:
     def test_valid_name_str(self):
@@ -50,13 +45,17 @@ class TestNoneKey:
 
 class TestEntityKeyWithStringName:
     factory = EntityKeyFactory()
+    sample_key_pairs = [
+        ('Book', 'name'),
+        ('BookComment', 'comment'),
+    ]
 
     def test_zero_length_pairs(self):
         with pytest.raises(ValueError):
             self.factory.build_from_pairs(pairs=[])
 
     def test_pairs_to_key(self):
-        key = self.factory.build_from_pairs(pairs=sample_key_pairs__with_str_name)
+        key = self.factory.build_from_pairs(pairs=self.sample_key_pairs)
         assert isinstance(key, EntityKey)
         assert len(key.pairs()) == 2
         assert key.kind() == 'BookComment'
@@ -84,7 +83,7 @@ class TestEntityKeyWithStringName:
         assert key.flat_pairs() == ['Book', 'name', 'BookComment', 'comment']
 
     def test_flat_pairs(self):
-        key = self.factory.build_from_pairs(pairs=sample_key_pairs__with_str_name)
+        key = self.factory.build_from_pairs(pairs=self.sample_key_pairs)
         assert key.flat_pairs() == ['Book', 'name', 'BookComment', 'comment']
 
     def test_build(self):
