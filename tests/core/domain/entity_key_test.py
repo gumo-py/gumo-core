@@ -10,6 +10,26 @@ sample_key_pairs__with_str_name = [
 ]
 
 
+class TestNoneKey:
+    def test_eq_none(self):
+        assert NoneKey() == NoneKey()
+
+    def test_parent(self):
+        assert NoneKey().parent() == NoneKey()
+
+    def test_values(self):
+        o = NoneKey()
+
+        assert o.kind() is None
+        assert o.name() is None
+        assert o.flat_pairs() == []
+        assert o.pairs() == []
+
+        assert o.key_literal() is None
+        assert o.key_path() is None
+        assert o.key_path_urlsafe() is None
+
+
 class TestEntityKeyWithStringName:
     factory = EntityKeyFactory()
 
@@ -89,9 +109,3 @@ class TestEntityKeyWithStringName:
 
         assert self.factory.build_from_key_url(key.key_url()) == key
         assert self.factory.build_from_key_url(child.key_url()) == child
-
-    def test_none_key_eq(self):
-        key1 = NoneKey()
-        key2 = NoneKey()
-
-        assert key1 == key2
