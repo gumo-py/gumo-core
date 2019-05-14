@@ -1,5 +1,6 @@
 import pytest
 
+from gumo.core.domain.entity_key import KeyPair
 from gumo.core.domain.entity_key import NoneKey
 from gumo.core.domain.entity_key import EntityKey
 from gumo.core.domain.entity_key import EntityKeyFactory
@@ -8,6 +9,23 @@ sample_key_pairs__with_str_name = [
     ('Book', 'name'),
     ('BookComment', 'comment'),
 ]
+
+
+class TestKeyPair:
+    def test_valid_name_str(self):
+        o = KeyPair(kind='Kind', name='name')
+        assert isinstance(o, KeyPair)
+        assert o == KeyPair(kind='Kind', name='name')
+
+    def test_valid_name_int(self):
+        o = KeyPair(kind='Kind', name=1234567)
+        assert isinstance(o, KeyPair)
+        assert o == KeyPair(kind='Kind', name=1234567)
+        assert o != KeyPair(kind='Kind', name='1234567')
+
+    def test_invalid_name(self):
+        with pytest.raises(ValueError):
+            KeyPair(kind='Kind', name={'key': 'value'})
 
 
 class TestNoneKey:

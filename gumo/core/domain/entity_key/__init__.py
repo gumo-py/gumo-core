@@ -11,7 +11,18 @@ import uuid
 @dataclasses.dataclass(frozen=True)
 class KeyPair:
     kind: str
-    name: str
+    name: Union[str, int]
+
+    def __post_init__(self):
+        if not isinstance(self.kind, str):
+            raise ValueError(
+                f'kind must be an instance of str, but received: {type(self.kind)} (value: {self.kind})'
+            )
+
+        if not (isinstance(self.name, str) or isinstance(self.name, int)):
+            raise ValueError(
+                f'name must be an instance of str or int, but received: {type(self.name)} (value: {self.name})'
+            )
 
 
 class _BaseKey:
