@@ -7,22 +7,23 @@ from gumo.core.domain.entity_key import EntityKeyFactory
 
 
 class TestKeyPair:
-    def test_valid_name_str(self):
-        o = KeyPair(kind='Kind', name='name')
-        assert isinstance(o, KeyPair)
-        assert o == KeyPair(kind='Kind', name='name')
+    name_key_pair = KeyPair(kind='Kind', name='name')
+    id_key_pair = KeyPair(kind='Kind', name=1234567)
 
-        assert o.is_name() == True
-        assert o.is_id() == False
+    def test_valid_name_str(self):
+        assert isinstance(self.name_key_pair, KeyPair)
+        assert self.name_key_pair == KeyPair(kind='Kind', name='name')
+
+        assert self.name_key_pair.is_name() == True
+        assert self.name_key_pair.is_id() == False
 
     def test_valid_name_int(self):
-        o = KeyPair(kind='Kind', name=1234567)
-        assert isinstance(o, KeyPair)
-        assert o == KeyPair(kind='Kind', name=1234567)
-        assert o != KeyPair(kind='Kind', name='1234567')
+        assert isinstance(self.id_key_pair, KeyPair)
+        assert self.id_key_pair == KeyPair(kind='Kind', name=self.id_key_pair.name)
+        assert self.id_key_pair != KeyPair(kind='Kind', name=str(self.id_key_pair.name))
 
-        assert o.is_id() == True
-        assert o.is_name() == False
+        assert self.id_key_pair.is_id() == True
+        assert self.id_key_pair.is_name() == False
 
     def test_invalid_name(self):
         with pytest.raises(ValueError):
