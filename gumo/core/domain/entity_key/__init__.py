@@ -24,11 +24,24 @@ class KeyPair:
                 f'name must be an instance of str or int, but received: {type(self.name)} (value: {self.name})'
             )
 
+        if self.kind.find("'") >= 0 or self.kind.find('"') >= 0:
+            raise ValueError(f'Invalid kind of "{self.kind}", do not include quotes in kind')
+
+        if isinstance(self.name, str):
+            if self.name.find("'") >= 0 or self.name.find('"') >= 0:
+                raise ValueError(f'Invalid name of "{self.name}", do not include quotes in name')
+
     def is_name(self) -> bool:
         return isinstance(self.name, str)
 
     def is_id(self) -> bool:
         return isinstance(self.name, int)
+
+    def key_pair_literal(self) -> str:
+        if self.is_name():
+            return f"'{self.kind}', '{self.name}'"
+        else:
+            return f"'{self.kind}', {self.name}"
 
 
 class _BaseKey:

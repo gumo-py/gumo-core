@@ -29,6 +29,25 @@ class TestKeyPair:
         with pytest.raises(ValueError):
             KeyPair(kind='Kind', name={'key': 'value'})
 
+    def test_invalid_kind_or_name(self):
+        with pytest.raises(ValueError, match='do not include quotes'):
+            KeyPair(kind='Kind', name='name"')
+
+        with pytest.raises(ValueError, match='do not include quotes'):
+            KeyPair(kind='Kind', name="name'with-single-quote")
+
+        with pytest.raises(ValueError, match='do not include quotes'):
+            KeyPair(kind='Kind"with-double-quote', name='name')
+
+        with pytest.raises(ValueError, match='do not include quotes'):
+            KeyPair(kind="Kind-with-'single-quote", name='name')
+
+    def test_key_pair_literal(self):
+        assert self.name_key_pair.key_pair_literal() == "'Kind', 'name'"
+        assert self.id_key_pair.key_pair_literal() == "'Kind', 1234567"
+
+        assert KeyPair(kind='Kind', name='1234567').key_pair_literal() == "'Kind', '1234567'"
+
 
 class TestNoneKey:
     def test_eq_none(self):
