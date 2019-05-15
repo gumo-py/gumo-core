@@ -24,6 +24,12 @@ class KeyPair:
                 f'name must be an instance of str or int, but received: {type(self.name)} (value: {self.name})'
             )
 
+    def is_name(self) -> bool:
+        return isinstance(self.name, str)
+
+    def is_id(self) -> bool:
+        return isinstance(self.name, int)
+
 
 class _BaseKey:
     def parent(self):
@@ -38,7 +44,7 @@ class _BaseKey:
     def kind(self) -> str:
         raise NotImplementedError()
 
-    def name(self) -> str:
+    def name(self) -> Union[str, int]:
         raise NotImplementedError()
 
     def key_literal(self) -> str:

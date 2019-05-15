@@ -12,11 +12,17 @@ class TestKeyPair:
         assert isinstance(o, KeyPair)
         assert o == KeyPair(kind='Kind', name='name')
 
+        assert o.is_name() == True
+        assert o.is_id() == False
+
     def test_valid_name_int(self):
         o = KeyPair(kind='Kind', name=1234567)
         assert isinstance(o, KeyPair)
         assert o == KeyPair(kind='Kind', name=1234567)
         assert o != KeyPair(kind='Kind', name='1234567')
+
+        assert o.is_id() == True
+        assert o.is_name() == False
 
     def test_invalid_name(self):
         with pytest.raises(ValueError):
