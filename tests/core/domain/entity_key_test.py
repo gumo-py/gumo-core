@@ -152,3 +152,46 @@ class TestEntityKeyWithStringName:
 
         assert self.factory.build_from_key_url(key.key_url()) == key
         assert self.factory.build_from_key_url(child.key_url()) == child
+
+
+class TestEntityKeyWithIntID:
+    factory = EntityKeyFactory()
+    sample_key_pairs = [
+        ('Book', 1234567890),
+        ('BookComment', 9991234567890999)
+    ]
+
+    def test_pairs_to_key(self):
+        key = self.factory.build_from_pairs(pairs=self.sample_key_pairs)
+        assert isinstance(key, EntityKey)
+        assert len(key.pairs()) == 2
+        assert key.kind() == 'BookComment'
+        assert key.name() == 9991234567890999
+
+        parent = key.parent()
+        assert isinstance(parent, EntityKey)
+        assert len(parent.pairs()) == 1
+        assert parent.kind() == 'Book'
+        assert parent.name() == 1234567890
+
+        grand_parent = parent.parent()
+        assert isinstance(grand_parent, NoneKey)
+        assert grand_parent == NoneKey()
+
+    def test_entity_key_literal(self):
+        key = self.factory.build_from_pairs(pairs=self.sample_key_pairs)
+        assert key.key_literal() == "Key('Book', 1234567890, 'BookComment', 9991234567890999)"
+
+    def test_entity_key_path(self):
+        key = self.factory.build_from_pairs(pairs=self.sample_key_pairs)
+        assert key.key_path() == 'Book:1234567890/BookComment:9991234567890999'
+        assert key.key_path_urlsafe() == 'Book%3A1234567890%2FBookComment%3A9991234567890999'
+
+        assert self.factory.build_from_key_path(key.key_path()) == key
+        assert self.factory.build_from_key_path(key.key_path_urlsafe()) == key
+
+    def test_entity_key_url(self):
+        key = self.factory.build_from_pairs(pairs=self.sample_key_pairs)
+        assert key.key_url() == 'Book/1234567890/BookComment/9991234567890999'
+
+        assert self.factory.build_from_key_url(key_url=key.key_url()) == key

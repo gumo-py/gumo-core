@@ -48,10 +48,10 @@ class _BaseKey:
     def parent(self):
         raise NotImplementedError()
 
-    def pairs(self) -> List:
+    def pairs(self) -> List[KeyPair]:
         return []
 
-    def flat_pairs(self) -> List:
+    def flat_pairs(self) -> List[Union[str, int]]:
         return []
 
     def kind(self) -> str:
@@ -144,7 +144,7 @@ class EntityKey(_BaseKey):
 
     def key_literal(self) -> str:
         return 'Key({})'.format(', '.join([
-            f"'{i}'" for i in self.flat_pairs()
+            pair.key_pair_literal() for pair in self.pairs()
         ]))
 
     def key_path(self) -> str:
@@ -208,6 +208,8 @@ class EntityKeyFactory:
         pairs = []
         for pair in key_path.replace('%2F', '/').replace('%3A', ':').split('/'):
             kind, name = pair.split(':')
+            if name.isdecimal():
+                name = int(name)
             pairs.append(KeyPair(kind=kind, name=name))
 
         return EntityKey(pairs)
@@ -230,6 +232,8 @@ class EntityKeyFactory:
         key_pairs = list(self._split_list(key_elements, 2))
 
         for pair in key_pairs:
+            if pair[1].isdecimal():
+                pair[1] = int(pair[1])
             pairs.append(KeyPair(kind=pair[0], name=pair[1]))
 
         return EntityKey(pairs)
