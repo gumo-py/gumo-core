@@ -216,9 +216,7 @@ class EntityKeyFactory:
         pairs = []
         for pair in key_path.replace('%2F', '/').replace('%3A', ':').split('/'):
             kind, name = pair.split(':')
-            if name.isdecimal():
-                name = int(name)
-            pairs.append(KeyPair(kind=kind, name=name))
+            pairs.append(KeyPair.build(kind=kind, name=name, implicit_id_str=True))
 
         return EntityKey(pairs)
 
@@ -240,8 +238,7 @@ class EntityKeyFactory:
         key_pairs = list(self._split_list(key_elements, 2))
 
         for pair in key_pairs:
-            if pair[1].isdecimal():
-                pair[1] = int(pair[1])
-            pairs.append(KeyPair(kind=pair[0], name=pair[1]))
+            kind, name = pair
+            pairs.append(KeyPair.build(kind=kind, name=name, implicit_id_str=True))
 
         return EntityKey(pairs)
