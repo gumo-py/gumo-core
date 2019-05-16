@@ -31,6 +31,14 @@ class KeyPair:
             if self.name.find("'") >= 0 or self.name.find('"') >= 0:
                 raise ValueError(f'Invalid name of "{self.name}", do not include quotes in name')
 
+    @classmethod
+    def build(cls, kind: str, name: Union[str, int], implicit_id_str: bool = True):
+        if implicit_id_str:
+            if isinstance(name, str) and name.isdecimal():
+                name = int(name)
+
+        return cls(kind=kind, name=name)
+
     def is_name(self) -> bool:
         return isinstance(self.name, str)
 
@@ -187,7 +195,7 @@ class EntityKeyFactory:
 
         return EntityKey(_pairs)
 
-    def build(self, kind: str, name: str, parent: Optional[EntityKey] = None) -> EntityKey:
+    def build(self, kind: str, name: Union[str, int], parent: Optional[EntityKey] = None) -> EntityKey:
         if parent:
             pairs = copy.deepcopy(parent.pairs())
         else:

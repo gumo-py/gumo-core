@@ -7,27 +7,22 @@ from gumo.core.domain.entity_key import EntityKeyFactory
 
 
 class TestKeyPair:
-    name_key_pair = KeyPair(kind='Kind', name='name')
-    id_key_pair = KeyPair(kind='Kind', name=1234567)
-
-    def test_valid_name_str(self):
-        assert isinstance(self.name_key_pair, KeyPair)
-        assert self.name_key_pair == KeyPair(kind='Kind', name='name')
-
-        assert self.name_key_pair.is_name() == True
-        assert self.name_key_pair.is_id() == False
-
-    def test_valid_name_int(self):
-        assert isinstance(self.id_key_pair, KeyPair)
-        assert self.id_key_pair == KeyPair(kind='Kind', name=self.id_key_pair.name)
-        assert self.id_key_pair != KeyPair(kind='Kind', name=str(self.id_key_pair.name))
-
-        assert self.id_key_pair.is_id() == True
-        assert self.id_key_pair.is_name() == False
-
     def test_invalid_name(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match='kind must be an instance of str,'):
+            KeyPair(kind=12345, name='name')
+        with pytest.raises(ValueError, match='name must be an instance of str or int'):
             KeyPair(kind='Kind', name={'key': 'value'})
+
+
+class TestKeyPairWithStr:
+    key_pair = KeyPair(kind='Kind', name='name')
+
+    def test_valid_name(self):
+        assert isinstance(self.key_pair, KeyPair)
+        assert self.key_pair == KeyPair(kind='Kind', name='name')
+
+        assert self.key_pair.is_name() == True
+        assert self.key_pair.is_id() == False
 
     def test_invalid_kind_or_name(self):
         with pytest.raises(ValueError, match='do not include quotes'):
@@ -43,10 +38,28 @@ class TestKeyPair:
             KeyPair(kind="Kind-with-'single-quote", name='name')
 
     def test_key_pair_literal(self):
-        assert self.name_key_pair.key_pair_literal() == "'Kind', 'name'"
+        assert self.key_pair.key_pair_literal() == "'Kind', 'name'"
+
+
+class TestKeyPairWithID:
+    id_key_pair = KeyPair(kind='Kind', name=1234567)
+
+    def test_valid_name_int(self):
+        assert isinstance(self.id_key_pair, KeyPair)
+        assert self.id_key_pair == KeyPair(kind='Kind', name=self.id_key_pair.name)
+        assert self.id_key_pair != KeyPair(kind='Kind', name=str(self.id_key_pair.name))
+
+        assert self.id_key_pair.is_id() == True
+        assert self.id_key_pair.is_name() == False
+
+    def test_key_pair_literal(self):
         assert self.id_key_pair.key_pair_literal() == "'Kind', 1234567"
 
-        assert KeyPair(kind='Kind', name='1234567').key_pair_literal() == "'Kind', '1234567'"
+    def test_build_implicit_id_str_convert(self):
+        assert KeyPair(kind='Kind', name=12345) == KeyPair.build(kind='Kind', name='12345', implicit_id_str=True)
+        assert KeyPair(kind='Kind', name=12345) != KeyPair.build(kind='Kind', name='12345', implicit_id_str=False)
+
+        assert KeyPair.build(kind='Kind', name='1234567').key_pair_literal() == "'Kind', 1234567"
 
 
 class TestNoneKey:
