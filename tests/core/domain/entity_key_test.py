@@ -21,8 +21,8 @@ class TestKeyPairWithStr:
         assert isinstance(self.key_pair, KeyPair)
         assert self.key_pair == KeyPair(kind='Kind', name='name')
 
-        assert self.key_pair.is_name() == True
-        assert self.key_pair.is_id() == False
+        assert self.key_pair.is_name()
+        assert not self.key_pair.is_id()
 
     def test_invalid_kind_or_name(self):
         with pytest.raises(ValueError, match='do not include quotes'):
@@ -49,8 +49,8 @@ class TestKeyPairWithID:
         assert self.id_key_pair == KeyPair(kind='Kind', name=self.id_key_pair.name)
         assert self.id_key_pair != KeyPair(kind='Kind', name=str(self.id_key_pair.name))
 
-        assert self.id_key_pair.is_id() == True
-        assert self.id_key_pair.is_name() == False
+        assert self.id_key_pair.is_id()
+        assert not self.id_key_pair.is_name()
 
     def test_key_pair_literal(self):
         assert self.id_key_pair.key_pair_literal() == "'Kind', 1234567"
