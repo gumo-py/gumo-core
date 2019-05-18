@@ -55,3 +55,17 @@ $ make build
 
 $ make test
 ```
+
+## EntityKey
+
+```python
+from gumo.core import EntityKey
+from gumo.core import EntityKeyFactory
+
+key = EntityKeyFactory().build(kind='Book', name='978-1-4028-9462-6')
+
+assert isinstance(key, EntityKey)
+assert key.key_literal() == "Key('Book', '978-1-4028-9462-6')"
+assert key.key_path() == 'Book:978-1-4028-9462-6'
+assert key.key_url() == 'Book/978-1-4028-9462-6'
+```

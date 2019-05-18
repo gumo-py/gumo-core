@@ -11,23 +11,61 @@ import uuid
 @dataclasses.dataclass(frozen=True)
 class KeyPair:
     kind: str
-    name: str
+    name: Union[str, int]
+
+    def __post_init__(self):
+        if not isinstance(self.kind, str):
+            raise ValueError(
+                f'kind must be an instance of str, but received: {type(self.kind)} (value: {self.kind})'
+            )
+
+        if not (isinstance(self.name, str) or isinstance(self.name, int)):
+            raise ValueError(
+                f'name must be an instance of str or int, but received: {type(self.name)} (value: {self.name})'
+            )
+
+        if self.kind.find("'") >= 0 or self.kind.find('"') >= 0:
+            raise ValueError(f'Invalid kind of "{self.kind}", do not include quotes in kind')
+
+        if isinstance(self.name, str):
+            if self.name.find("'") >= 0 or self.name.find('"') >= 0:
+                raise ValueError(f'Invalid name of "{self.name}", do not include quotes in name')
+
+    @classmethod
+    def build(cls, kind: str, name: Union[str, int], implicit_id_str: bool = True):
+        if implicit_id_str:
+            if isinstance(name, str) and name.isdecimal():
+                name = int(name)
+
+        return cls(kind=kind, name=name)
+
+    def is_name(self) -> bool:
+        return isinstance(self.name, str)
+
+    def is_id(self) -> bool:
+        return isinstance(self.name, int)
+
+    def key_pair_literal(self) -> str:
+        if self.is_name():
+            return f"'{self.kind}', '{self.name}'"
+        else:
+            return f"'{self.kind}', {self.name}"
 
 
 class _BaseKey:
     def parent(self):
         raise NotImplementedError()
 
-    def pairs(self) -> List:
+    def pairs(self) -> List[KeyPair]:
         return []
 
-    def flat_pairs(self) -> List:
+    def flat_pairs(self) -> List[Union[str, int]]:
         return []
 
     def kind(self) -> str:
         raise NotImplementedError()
 
-    def name(self) -> str:
+    def name(self) -> Union[str, int]:
         raise NotImplementedError()
 
     def key_literal(self) -> str:
@@ -114,7 +152,7 @@ class EntityKey(_BaseKey):
 
     def key_literal(self) -> str:
         return 'Key({})'.format(', '.join([
-            f"'{i}'" for i in self.flat_pairs()
+            pair.key_pair_literal() for pair in self.pairs()
         ]))
 
     def key_path(self) -> str:
@@ -157,7 +195,7 @@ class EntityKeyFactory:
 
         return EntityKey(_pairs)
 
-    def build(self, kind: str, name: str, parent: Optional[EntityKey] = None) -> EntityKey:
+    def build(self, kind: str, name: Union[str, int], parent: Optional[EntityKey] = None) -> EntityKey:
         if parent:
             pairs = copy.deepcopy(parent.pairs())
         else:
@@ -178,7 +216,7 @@ class EntityKeyFactory:
         pairs = []
         for pair in key_path.replace('%2F', '/').replace('%3A', ':').split('/'):
             kind, name = pair.split(':')
-            pairs.append(KeyPair(kind=kind, name=name))
+            pairs.append(KeyPair.build(kind=kind, name=name, implicit_id_str=True))
 
         return EntityKey(pairs)
 
@@ -200,6 +238,7 @@ class EntityKeyFactory:
         key_pairs = list(self._split_list(key_elements, 2))
 
         for pair in key_pairs:
-            pairs.append(KeyPair(kind=pair[0], name=pair[1]))
+            kind, name = pair
+            pairs.append(KeyPair.build(kind=kind, name=name, implicit_id_str=True))
 
         return EntityKey(pairs)
