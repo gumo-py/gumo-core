@@ -39,6 +39,15 @@ class KeyPair:
 
         return cls(kind=kind, name=name)
 
+    @classmethod
+    def build_from_dict(cls, doc: dict):
+        if 'kind' not in doc:
+            raise ValueError(f'dictionary must have "kind" item, but received doc={doc}')
+        if 'name' not in doc and 'id' not in doc:
+            raise ValueError(f'dictionary must have "name" or "id" item, but received doc={doc}')
+
+        return cls(doc.get('kind'), doc.get('name', doc.get('id')))
+
     def is_name(self) -> bool:
         return isinstance(self.name, str)
 
@@ -186,7 +195,7 @@ class EntityKeyFactory:
         _pairs = []
         for pair in pairs:
             if isinstance(pair, dict):
-                key_pair = KeyPair(pair.get('kind'), pair.get('name'))
+                key_pair = KeyPair.build_from_dict(doc=pair)
             elif isinstance(pair, tuple) or isinstance(pair, list):
                 key_pair = KeyPair(pair[0], pair[1])
             else:
