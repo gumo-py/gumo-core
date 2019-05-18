@@ -54,19 +54,19 @@ def configure(
         google_cloud_location: Optional[str] = None,
         service_account_credential_path: Optional[str] = None,
 ):
-    conifg = ConfigurationFactory.build(
+    config = ConfigurationFactory.build(
         google_cloud_project=google_cloud_project,
         google_cloud_location=google_cloud_location,
         service_account_credential_path=service_account_credential_path,
     )
-    logger.debug(f'Gumo is configured, config={conifg}')
+    logger.debug(f'Gumo is configured, config={config}')
 
     if 'GOOGLE_CLOUD_PROJECT' not in os.environ:
         logger.debug('Environment Variable "GOOGLE_CLOUD_PROJECT" is not configured.')
-        project_id = conifg.google_cloud_project.value
+        project_id = config.google_cloud_project.value
         os.environ['GOOGLE_CLOUD_PROJECT'] = project_id
         logger.debug(f'Environment Variable "GOOGLE_CLOUD_PROJECT" has been updated to {project_id}')
 
-    injector.binder.bind(GumoConfiguration, conifg)
+    injector.binder.bind(GumoConfiguration, config)
 
-    return conifg
+    return config
