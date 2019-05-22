@@ -14,4 +14,4 @@ class MockAppEngineEnvironment:
 
         if 'env_variables' in app_yaml:
             for key, value in app_yaml['env_variables'].items():
-                os.environ[key] = value
+                os.environ[key] = str(value)
