@@ -1,6 +1,7 @@
 import dataclasses
 from typing import List
 from typing import Union
+from typing import Optional
 
 
 @dataclasses.dataclass(frozen=True)
@@ -180,3 +181,18 @@ class EntityKey(_BaseKey):
 
     def key_path_urlsafe(self) -> str:
         return self.key_path().replace('/', '%2F').replace(':', '%3A')
+
+
+@dataclasses.dataclass(frozen=True)
+class IncompleteKey:
+    kind: str
+    parent: Optional[EntityKey] = None
+
+    def __post_init__(self):
+        if not isinstance(self.kind, str):
+            raise ValueError(f'kind must be an instance of str, but received {type(self.kind)} (value: {self.kind})')
+
+        if not (self.parent is None or isinstance(self.parent, EntityKey)):
+            raise ValueError(
+                f'parent must be an instance of EntityKey, but received {type(self.parent)} (value: {self.parent}'
+            )
