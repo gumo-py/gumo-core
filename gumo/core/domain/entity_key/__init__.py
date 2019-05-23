@@ -9,6 +9,7 @@ import uuid
 from gumo.core.domain.entity_key.key import EntityKey
 from gumo.core.domain.entity_key.key import KeyPair
 from gumo.core.domain.entity_key.key import NoneKey
+from gumo.core.domain.entity_key.key import IncompleteKey
 
 
 class EntityKeyFactory:
@@ -37,7 +38,11 @@ class EntityKeyFactory:
 
         return EntityKey(pairs)
 
+    def build_incomplete_key(self, kind: str, parent: Optional[EntityKey] = None) -> IncompleteKey:
+        return IncompleteKey(kind=kind, parent=parent)
+
     def build_for_new(self, kind: str, parent: Optional[EntityKey] = None) -> EntityKey:
+        """(deprecated) Please use gumo.core.application.EntityKeyGenerator."""
         name = self._generate_new_uuid()
         return self.build(kind=kind, name=name, parent=parent)
 
