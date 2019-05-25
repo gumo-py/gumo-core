@@ -19,10 +19,7 @@ class KeyGenerateStyle(enum.Enum):
 
 
 class KeyIDAllocator:
-    def allocate_id(self, incomplete_key: IncompleteKey) -> EntityKey:
-        raise NotImplementedError()
-
-    def allocate_ids(self, incomplete_keys: List[IncompleteKey]) -> List[EntityKey]:
+    def allocate(self, incomplete_key: IncompleteKey) -> EntityKey:
         raise NotImplementedError()
 
 
@@ -66,5 +63,5 @@ class EntityKeyGenerator:
         return uuid.uuid4().bytes.decode('utf-8')
 
     def _generate_int(self, incomplete_key: IncompleteKey) -> int:
-        key = self._id_allocator.allocate_id(incomplete_key=incomplete_key)
+        key = self._id_allocator.allocate(incomplete_key=incomplete_key)
         return key.name()
