@@ -196,3 +196,9 @@ class IncompleteKey:
             raise ValueError(
                 f'parent must be an instance of EntityKey, but received {type(self.parent)} (value: {self.parent}'
             )
+
+    def flat_pairs(self):
+        flat_pairs = self.parent.flat_pairs() if self.parent else []
+        flat_pairs.append(self.kind)
+
+        return flat_pairs
