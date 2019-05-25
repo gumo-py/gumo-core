@@ -1,5 +1,4 @@
 from typing import Union
-from typing import List
 
 import uuid
 import base64
