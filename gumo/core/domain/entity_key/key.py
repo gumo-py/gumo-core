@@ -202,3 +202,11 @@ class IncompleteKey:
         flat_pairs.append(self.kind)
 
         return flat_pairs
+
+    def key_literal(self) -> str:
+        if self.parent:
+            return 'IncompleteKey({}, {})'.format(
+                ', '.join([pair.key_pair_literal() for pair in self.parent.pairs()]),
+                self.kind
+            )
+        return 'IncompleteKey({})'.format(self.kind)
