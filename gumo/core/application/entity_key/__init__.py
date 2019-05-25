@@ -23,6 +23,8 @@ class KeyIDAllocator:
 
 
 class EntityKeyGenerator:
+    KeyGenerateStyle = KeyGenerateStyle
+
     def __init__(self, key_generate_style: KeyGenerateStyle = KeyGenerateStyle.STR_SHORT):
         self._key_generate_style = key_generate_style
 
