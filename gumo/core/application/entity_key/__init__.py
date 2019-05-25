@@ -33,7 +33,7 @@ class EntityKeyGenerator:
 
     def _get_id_allocator(self) -> KeyIDAllocator:
         try:
-            import gumo.datastore
+            import gumo.datastore  # noqa: F401 for dependency checks.
         except ImportError:
             raise RuntimeError(f'gumo.datastore is not imported. Cloud not use KeyGenerateStyle.INT.')
 
