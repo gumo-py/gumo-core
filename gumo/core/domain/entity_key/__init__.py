@@ -8,7 +8,7 @@ import uuid
 
 from gumo.core.domain.entity_key.key import EntityKey
 from gumo.core.domain.entity_key.key import KeyPair
-from gumo.core.domain.entity_key.key import NoneKey
+from gumo.core.domain.entity_key.key import NoneKey  # noqa: F401
 from gumo.core.domain.entity_key.key import IncompleteKey
 
 
