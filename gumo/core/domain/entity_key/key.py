@@ -61,6 +61,9 @@ class _BaseKey:
     def parent(self):
         raise NotImplementedError()
 
+    def has_parent(self) -> bool:
+        raise NotImplementedError()
+
     def pairs(self) -> List[KeyPair]:
         return []
 
@@ -95,6 +98,9 @@ class NoneKey(_BaseKey):
 
     def parent(self):
         return self
+
+    def has_parent(self) -> bool:
+        return False
 
     def pairs(self):
         return []
@@ -132,11 +138,15 @@ class EntityKey(_BaseKey):
         if len(self._pairs) == 0:
             raise ValueError('EntityKey#pairs must have at least one element.')
 
+    def has_parent(self) -> bool:
+        return len(self._pairs) > 1
+
     def parent(self):
-        if len(self._pairs) == 1:
+        if self.has_parent():
+            return EntityKey(self._pairs[0:-1])
+        else:
             return NoneKey.get_instance()
 
-        return EntityKey(self._pairs[0:-1])
 
     def pairs(self):
         return self._pairs

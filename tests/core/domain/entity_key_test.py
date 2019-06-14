@@ -68,6 +68,7 @@ class TestNoneKey:
 
     def test_parent(self):
         assert NoneKey().parent() == NoneKey()
+        assert not NoneKey().has_parent()
 
     def test_values(self):
         o = NoneKey()
@@ -99,12 +100,14 @@ class TestEntityKeyWithStringName:
         assert len(key.pairs()) == 2
         assert key.kind() == 'BookComment'
         assert key.name() == 'comment'
+        assert key.has_parent()
 
         parent = key.parent()
         assert isinstance(parent, EntityKey)
         assert len(parent.pairs()) == 1
         assert parent.kind() == 'Book'
         assert parent.name() == 'name'
+        assert not parent.has_parent()
 
         none = parent.parent()
         assert isinstance(none, NoneKey)
