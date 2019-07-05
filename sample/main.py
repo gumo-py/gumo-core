@@ -3,6 +3,7 @@ import logging
 import sys
 import os
 import datetime
+import hashlib
 
 from gumo.core import configure as core_configure
 from gumo.core import get_google_oauth_credentials
@@ -36,7 +37,7 @@ def credential():
     result.append('')
     result.append(f'service_account_email = {cred.service_account_email}')
     result.append(f'valid = {cred.valid}')
-    result.append(f'token = {cred.token}')
+    result.append(f'token (sha256) = {hashlib.sha256(cred.token.encode("utf-8")).hexdigest() if cred.token else None}')
     result.append(f'expired = {cred.expired}')
     result.append(f'expiry = {cred.expiry}')
     result.append(f'now = {datetime.datetime.utcnow()}')
@@ -58,7 +59,7 @@ def id_token_credential():
     result.append(f'signer_email = {cred.signer_email}')
     result.append(f'service_account_email = {cred.service_account_email}')
     result.append(f'valid = {cred.valid}')
-    result.append(f'token = {cred.token}')
+    result.append(f'token (sha256) = {hashlib.sha256(cred.token.encode("utf-8")).hexdigest() if cred.token else None}')
     result.append(f'expired = {cred.expired}')
     result.append(f'expiry = {cred.expiry}')
     result.append(f'now = {datetime.datetime.utcnow()}')
