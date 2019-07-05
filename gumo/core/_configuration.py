@@ -3,7 +3,7 @@ from logging import getLogger
 from typing import Optional
 
 from gumo.core.injector import injector
-from gumo.core.domain.configuration import GumoConfiguration
+from gumo.core.infrastructure.configuration import GumoConfiguration
 from gumo.core.domain.configuration import GoogleCloudLocation
 from gumo.core.domain.configuration import GoogleCloudProjectID
 from gumo.core.domain.configuration import ApplicationPlatform

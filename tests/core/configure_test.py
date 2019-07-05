@@ -1,7 +1,7 @@
 import pytest
 
 from gumo.core._configuration import ConfigurationFactory
-from gumo.core.domain.configuration import GumoConfiguration
+from gumo.core import GumoConfiguration
 from gumo.core.domain.configuration import GoogleCloudLocation
 from gumo.core.domain.configuration import GoogleCloudProjectID
 from gumo.core.domain.configuration import ServiceAccountCredentialConfig

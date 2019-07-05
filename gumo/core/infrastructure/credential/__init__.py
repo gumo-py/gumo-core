@@ -13,7 +13,7 @@ from injector import inject
 
 from gumo.core.exceptions import ServiceAccountConfigurationError
 from gumo.core.injector import injector
-from gumo.core.domain.configuration import GumoConfiguration
+from gumo.core.infrastructure.configuration import GumoConfiguration
 
 DEFAULT_TOKEN_URI = 'https://www.googleapis.com/oauth2/v4/token'
 

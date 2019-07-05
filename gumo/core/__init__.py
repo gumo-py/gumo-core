@@ -2,7 +2,7 @@ from gumo.core._configuration import configure
 
 from gumo.core.exceptions import ConfigurationError
 
-from gumo.core.domain.configuration import GumoConfiguration
+from gumo.core.infrastructure.configuration import GumoConfiguration
 from gumo.core.domain.configuration import GoogleCloudLocation
 from gumo.core.domain.configuration import GoogleCloudProjectID
 
