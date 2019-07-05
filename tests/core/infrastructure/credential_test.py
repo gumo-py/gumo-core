@@ -26,11 +26,16 @@ class TestCredentialManager:
         for k, v in self.env_vars.items():
             os.environ[k] = v
 
+    def prepare_credential(self):
+        if 'GOOGLE_APPLICATION_CREDENTIALS_FOR_TEST' in os.environ:
+            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.environ['GOOGLE_APPLICATION_CREDENTIALS_FOR_TEST']
+
     def test_credential_manager(self):
         o = injector.get(GoogleOAuthCredentialManager)  # type: GoogleOAuthCredentialManager
         assert isinstance(o, GoogleOAuthCredentialManager)
 
     def test_build_credential_with_google_application_credentials(self):
+        self.prepare_credential()
         assert 'GOOGLE_APPLICATION_CREDENTIALS' in os.environ
         assert os.path.exists(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
@@ -42,6 +47,7 @@ class TestCredentialManager:
         assert cred.signer_email.index('gserviceaccount.com') > 0
 
     def test_build_id_token_credential_with_google_application_credentials(self):
+        self.prepare_credential()
         assert 'GOOGLE_APPLICATION_CREDENTIALS' in os.environ
         assert os.path.exists(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 

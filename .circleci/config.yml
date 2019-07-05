@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.7.2
+        environment:
+          GOOGLE_APPLICATION_CREDENTIALS_FOR_TEST: /tmp/google-account-credential-for-test.json
+
 
     working_directory: ~/repo
 
@@ -37,6 +40,11 @@ jobs:
 
             make build
             git diff --exit-code
+
+      - run:
+          name: prepare credentials for testing
+          command: |
+            echo "${GOOGLE_APPLICATION_CREDENTIAL_PAYLOAD}" > $GOOGLE_APPLICATION_CREDENTIALS_FOR_TEST
 
       - run:
           name: run tests
