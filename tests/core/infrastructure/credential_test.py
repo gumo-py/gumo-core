@@ -31,6 +31,7 @@ class TestCredentialManager:
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.environ['GOOGLE_APPLICATION_CREDENTIALS_FOR_TEST']
 
     def test_credential_manager(self):
+        self.prepare_credential()
         o = injector.get(GoogleOAuthCredentialManager)  # type: GoogleOAuthCredentialManager
         assert isinstance(o, GoogleOAuthCredentialManager)
 
@@ -40,7 +41,7 @@ class TestCredentialManager:
         assert os.path.exists(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
         manager = injector.get(GoogleOAuthCredentialManager)  # type: GoogleOAuthCredentialManager
-        cred = manager.build_credential()
+        cred = manager.build_credentials()
 
         assert isinstance(cred, Credentials)
         assert cred.signer_email.index('@') > 0
@@ -51,10 +52,13 @@ class TestCredentialManager:
         assert 'GOOGLE_APPLICATION_CREDENTIALS' in os.environ
         assert os.path.exists(os.environ['GOOGLE_APPLICATION_CREDENTIALS'])
 
-        TARGET_AUDIENCE = '204100934405-b9gjp2hnbtq12r9s4i460mmrsjl1jvg4.apps.googleusercontent.com'
+        target_audience = os.environ.get(
+            'TEST_TARGET_AUDIENCE',
+            '204100934405-b9gjp2hnbtq12r9s4i460mmrsjl1jvg4.apps.googleusercontent.com'
+        )
         manager = injector.get(GoogleOAuthCredentialManager)  # type: GoogleOAuthCredentialManager
-        id_token_credential, request = manager.build_id_token_credential(
-            target_audience=TARGET_AUDIENCE
+        id_token_credential, request = manager.build_id_token_credentials(
+            target_audience=target_audience
         )
 
         assert isinstance(id_token_credential, IDTokenCredentials)

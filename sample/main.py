@@ -5,8 +5,8 @@ import os
 import datetime
 
 from gumo.core import configure as core_configure
-from gumo.core import get_google_oauth_credential
-from gumo.core import get_google_id_token_credential
+from gumo.core import get_google_oauth_credentials
+from gumo.core import get_google_id_token_credentials
 
 TARGET_AUDIENCE = '204100934405-b9gjp2hnbtq12r9s4i460mmrsjl1jvg4.apps.googleusercontent.com'
 
@@ -30,7 +30,7 @@ def hello():
 
 @app.route('/credential')
 def credential():
-    cred = get_google_oauth_credential()
+    cred = get_google_oauth_credentials()
 
     result = [str(cred)]
     result.append('')
@@ -49,7 +49,7 @@ def credential():
 
 @app.route('/id_token_credential')
 def id_token_credential():
-    cred, request = get_google_id_token_credential(
+    cred, request = get_google_id_token_credentials(
         target_audience=TARGET_AUDIENCE
     )
 
