@@ -2,8 +2,13 @@ import flask
 import logging
 import sys
 import os
+import datetime
 
 from gumo.core import configure as core_configure
+from gumo.core import get_google_oauth_credential
+from gumo.core import get_google_id_token_credential
+
+TARGET_AUDIENCE = '204100934405-b9gjp2hnbtq12r9s4i460mmrsjl1jvg4.apps.googleusercontent.com'
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -21,6 +26,47 @@ app = flask.Flask(__name__)
 @app.route('/')
 def hello():
     return f'Hello, world. (gumo-core)'
+
+
+@app.route('/credential')
+def credential():
+    cred = get_google_oauth_credential()
+
+    result = [str(cred)]
+    result.append('')
+    result.append(f'service_account_email = {cred.service_account_email}')
+    result.append(f'valid = {cred.valid}')
+    result.append(f'token = {cred.token}')
+    result.append(f'expired = {cred.expired}')
+    result.append(f'expiry = {cred.expiry}')
+    result.append(f'now = {datetime.datetime.utcnow()}')
+
+    return flask.Response(
+        '\n'.join(result),
+        content_type='text/plain'
+    )
+
+
+@app.route('/id_token_credential')
+def id_token_credential():
+    cred, request = get_google_id_token_credential(
+        target_audience=TARGET_AUDIENCE
+    )
+
+    result = [str(cred)]
+    result.append('')
+    result.append(f'signer_email = {cred.signer_email}')
+    result.append(f'service_account_email = {cred.service_account_email}')
+    result.append(f'valid = {cred.valid}')
+    result.append(f'token = {cred.token}')
+    result.append(f'expired = {cred.expired}')
+    result.append(f'expiry = {cred.expiry}')
+    result.append(f'now = {datetime.datetime.utcnow()}')
+
+    return flask.Response(
+        '\n'.join(result),
+        content_type='text/plain'
+    )
 
 
 if __name__ == '__main__':
