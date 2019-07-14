@@ -43,3 +43,6 @@ __all__ = [
     get_google_oauth_credential.__name__,
     get_google_id_token_credential.__name__,
 ]
+
+
+configure()
