@@ -1,0 +1,5 @@
+runtime: python37
+service: gumo-core
+
+env_variables:
+  SAMPLE_VARIABLE: sample_value
