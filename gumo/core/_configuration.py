@@ -25,3 +25,7 @@ def configure(
     injector.binder.bind(GumoConfiguration, to=config, scope=singleton)
 
     return config
+
+
+def get_config() -> GumoConfiguration:
+    return injector.get(GumoConfiguration)

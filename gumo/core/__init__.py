@@ -1,4 +1,5 @@
 from gumo.core._configuration import configure
+from gumo.core._configuration import get_config
 
 from gumo.core.exceptions import ConfigurationError
 
@@ -23,6 +24,7 @@ get_google_id_token_credential = get_google_id_token_credentials
 
 __all__ = [
     configure.__name__,
+    get_config.__name__,
 
     ConfigurationError.__name__,
 
