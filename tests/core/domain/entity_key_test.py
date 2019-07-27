@@ -169,6 +169,12 @@ class TestEntityKeyWithStringName:
         assert self.factory.build_from_key_url(key.key_url()) == key
         assert self.factory.build_from_key_url(child.key_url()) == child
 
+    def test_entity_key_hashable(self):
+        key = self.factory.build(kind='Book', name='name')
+        d = {}
+        d[key] = 'Book'
+        assert len(d) == 1
+
 
 class TestEntityKeyWithIntID:
     factory = EntityKeyFactory()
