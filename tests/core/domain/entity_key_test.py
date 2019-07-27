@@ -4,6 +4,7 @@ from gumo.core.domain.entity_key import KeyPair
 from gumo.core.domain.entity_key import NoneKey
 from gumo.core.domain.entity_key import EntityKey
 from gumo.core.domain.entity_key import EntityKeyFactory
+from gumo.core.domain.entity_key import IncompleteKey
 
 
 class TestKeyPair:
@@ -217,3 +218,16 @@ class TestEntityKeyWithIntID:
         assert key.key_url() == 'Book/1234567890/BookComment/9991234567890999'
 
         assert self.factory.build_from_key_url(key_url=key.key_url()) == key
+
+
+class TestIncompleteKey:
+    def test_build(self):
+        key = IncompleteKey('Book')
+        assert isinstance(key, IncompleteKey)
+        assert key.parent is None
+        assert key.key_literal() == 'IncompleteKey(Book)'
+
+    def test_hashable(self):
+        key = IncompleteKey('Book')
+        d = {key: 'Book'}
+        assert len(d) == 1

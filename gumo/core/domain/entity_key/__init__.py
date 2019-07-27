@@ -2,7 +2,6 @@ from typing import List
 from typing import Union
 from typing import Optional
 
-import copy
 import base64
 import uuid
 
