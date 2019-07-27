@@ -1,4 +1,6 @@
 from typing import Union
+from typing import List
+from typing import Optional
 
 import uuid
 import base64
@@ -18,6 +20,9 @@ class KeyGenerateStyle(enum.Enum):
 
 
 class KeyIDAllocator:
+    def allocate_keys(self, incomplete_key: IncompleteKey, num_ids: Optional[int] = None) -> List[EntityKey]:
+        raise NotImplementedError()
+
     def allocate(self, incomplete_key: IncompleteKey) -> EntityKey:
         raise NotImplementedError()
 
