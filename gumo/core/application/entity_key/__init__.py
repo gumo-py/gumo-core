@@ -1,4 +1,8 @@
 from typing import Union
+from typing import List
+from typing import Optional
+
+from injector import singleton
 
 import uuid
 import base64
@@ -18,6 +22,9 @@ class KeyGenerateStyle(enum.Enum):
 
 
 class KeyIDAllocator:
+    def allocate_keys(self, incomplete_key: IncompleteKey, num_ids: Optional[int] = None) -> List[EntityKey]:
+        raise NotImplementedError()
+
     def allocate(self, incomplete_key: IncompleteKey) -> EntityKey:
         raise NotImplementedError()
 
@@ -37,7 +44,7 @@ class EntityKeyGenerator:
         except ImportError:
             raise RuntimeError(f'gumo.datastore is not imported. Cloud not use KeyGenerateStyle.INT.')
 
-        return injector.get(KeyIDAllocator)
+        return injector.get(KeyIDAllocator, scope=singleton)
 
     def generate(self, incomplete_key: IncompleteKey) -> EntityKey:
         return EntityKeyFactory().build(
