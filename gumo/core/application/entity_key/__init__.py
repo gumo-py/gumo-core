@@ -2,6 +2,8 @@ from typing import Union
 from typing import List
 from typing import Optional
 
+from injector import singleton
+
 import uuid
 import base64
 import enum
@@ -42,7 +44,7 @@ class EntityKeyGenerator:
         except ImportError:
             raise RuntimeError(f'gumo.datastore is not imported. Cloud not use KeyGenerateStyle.INT.')
 
-        return injector.get(KeyIDAllocator)
+        return injector.get(KeyIDAllocator, scope=singleton)
 
     def generate(self, incomplete_key: IncompleteKey) -> EntityKey:
         return EntityKeyFactory().build(
