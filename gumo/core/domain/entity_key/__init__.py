@@ -16,27 +16,36 @@ class EntityKeyFactory:
     def __init__(self):
         pass
 
-    def build_from_pairs(self, pairs: List[Union[tuple, dict]]) -> EntityKey:
-        _pairs = []
+    def build_from_pairs(self, pairs: List[Union[tuple, dict, KeyPair]]) -> EntityKey:
+        key = None
+
+        if len(pairs) == 0:
+            raise ValueError('pairs must have at least one element.')
+
         for pair in pairs:
             if isinstance(pair, dict):
                 key_pair = KeyPair.build_from_dict(doc=pair)
             elif isinstance(pair, tuple) or isinstance(pair, list):
                 key_pair = KeyPair(pair[0], pair[1])
+            elif isinstance(pair, KeyPair):
+                key_pair = pair
             else:
                 raise ValueError(f'Unknown object type: {type(pair)}, got: {pair}')
-            _pairs.append(key_pair)
 
-        return EntityKey(_pairs)
+            key = EntityKey(
+                _kind=key_pair.kind,
+                _name=key_pair.name,
+                _parent=key
+            )
+
+        return key
 
     def build(self, kind: str, name: Union[str, int], parent: Optional[EntityKey] = None) -> EntityKey:
-        if parent:
-            pairs = copy.deepcopy(parent.pairs())
-        else:
-            pairs = []
-        pairs.append(KeyPair(kind=kind, name=name))
-
-        return EntityKey(pairs)
+        return EntityKey(
+            _kind=kind,
+            _name=name,
+            _parent=parent
+        )
 
     def build_incomplete_key(self, kind: str, parent: Optional[EntityKey] = None) -> IncompleteKey:
         return IncompleteKey(kind=kind, parent=parent)
@@ -56,7 +65,7 @@ class EntityKeyFactory:
             kind, name = pair.split(':')
             pairs.append(KeyPair.build(kind=kind, name=name, implicit_id_str=True))
 
-        return EntityKey(pairs)
+        return self.build_from_pairs(pairs=pairs)
 
     @staticmethod
     def _split_list(l, n):
@@ -79,4 +88,4 @@ class EntityKeyFactory:
             kind, name = pair
             pairs.append(KeyPair.build(kind=kind, name=name, implicit_id_str=True))
 
-        return EntityKey(pairs)
+        return self.build_from_pairs(pairs=pairs)

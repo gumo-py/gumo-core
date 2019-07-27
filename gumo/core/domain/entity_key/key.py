@@ -132,24 +132,55 @@ class NoneKey(_BaseKey):
 
 @dataclasses.dataclass(frozen=True)
 class EntityKey(_BaseKey):
-    _pairs: List[KeyPair]
+    _kind: str
+    _name: Union[str, int]
+    _parent: object  # type: EntityKey
 
     def __post_init__(self):
-        if len(self._pairs) == 0:
-            raise ValueError('EntityKey#pairs must have at least one element.')
+        if not isinstance(self._kind, str):
+            raise ValueError(
+                f'kind must be an instance of str, but received: {type(self._kind)} (value: {self._kind})'
+            )
+
+        if not (isinstance(self._name, str) or isinstance(self._name, int)):
+            raise ValueError(
+                f'name must be an instance of str or int, but received: {type(self._name)} (value: {self._name})'
+            )
+
+        if self._kind.find("'") >= 0 or self._kind.find('"') >= 0:
+            raise ValueError(f'Invalid kind of "{self._kind}", do not include quotes in kind')
+
+        if isinstance(self._name, str):
+            if self._name.find("'") >= 0 or self._name.find('"') >= 0:
+                raise ValueError(f'Invalid name of "{self._name}", do not include quotes in name')
+
+    def is_name(self) -> bool:
+        return isinstance(self._name, str)
+
+    def is_id(self) -> bool:
+        return isinstance(self._name, int)
 
     def has_parent(self) -> bool:
-        return len(self._pairs) > 1
+        return self._parent is not None
 
     def parent(self):
+        """
+        :rtype: EntityKey
+        """
         if self.has_parent():
-            return EntityKey(self._pairs[0:-1])
+            return self._parent
         else:
             return NoneKey.get_instance()
 
-
     def pairs(self):
-        return self._pairs
+        pairs = []
+        if self.has_parent():
+            pairs.extend(self.parent().pairs())
+        pairs.append(KeyPair(
+            kind=self._kind,
+            name=self._name,
+        ))
+        return pairs
 
     def flat_pairs(self):
         flat_pairs = []
@@ -160,10 +191,10 @@ class EntityKey(_BaseKey):
         return flat_pairs
 
     def kind(self):
-        return self._pairs[-1].kind
+        return self._kind
 
     def name(self):
-        return self._pairs[-1].name
+        return self._name
 
     def key_literal(self) -> str:
         return 'Key({})'.format(', '.join([
