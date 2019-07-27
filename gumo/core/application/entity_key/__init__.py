@@ -22,7 +22,7 @@ class KeyGenerateStyle(enum.Enum):
 
 
 class KeyIDAllocator:
-    def allocate_keys(self, incomplete_key: IncompleteKey, num_ids: Optional[int] = None) -> List[EntityKey]:
+    def allocate_keys(self, incomplete_key: IncompleteKey, num_keys: Optional[int] = None) -> List[EntityKey]:
         raise NotImplementedError()
 
     def allocate(self, incomplete_key: IncompleteKey) -> EntityKey:
