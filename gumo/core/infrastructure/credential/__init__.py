@@ -134,7 +134,7 @@ class _GoogleCredentialManagerForComputeEngine:
             if not id_token_credentials or not id_token_credentials.valid:
                 logger.debug('Fetch compute_engine.IDTokenCredentials and token refresh.')
 
-                self._id_token_credentials = compute_engine.IDTokenCredentials(
+                id_token_credentials = compute_engine.IDTokenCredentials(
                     request=request,
                     target_audience=target_audience,
                     token_uri=token_uri if token_uri else DEFAULT_TOKEN_URI,
