@@ -34,7 +34,7 @@ class _GoogleCredentialManagerForServiceAccountCredential:
         self._credential_file_path = credential_file_path
 
         self._credentials: Optional[Credentials] = None
-        self._id_token_credentials: Optional[IDTokenCredentials] = None
+        self._cache_id_token_credentials = {}
 
     def build_credentials(self) -> Credentials:
         try:
@@ -53,27 +53,34 @@ class _GoogleCredentialManagerForServiceAccountCredential:
     def _build_request(self) -> Request:
         return google.auth.transport.requests.Request()
 
+    def _fetch_id_token_credentials(self, target_audience: str) -> Optional[IDTokenCredentials]:
+        if target_audience in self._cache_id_token_credentials:
+            return self._cache_id_token_credentials.get(target_audience)
+
     def build_id_token_credentials(
             self,
             target_audience: str,
             token_uri: Optional[str] = None,
     ) -> Tuple[IDTokenCredentials, Request]:
         request = self._build_request()
+        id_token_credentials = self._fetch_id_token_credentials(target_audience=target_audience)
 
         try:
-            if not self._id_token_credentials or not self._id_token_credentials.valid:
+            if not id_token_credentials or not id_token_credentials.valid:
                 logger.debug('Build service_account.IDTokenCredentials and token refresh.')
 
                 _credential = self.build_credentials()
-                self._id_token_credentials = service_account.IDTokenCredentials(
+                id_token_credentials = service_account.IDTokenCredentials(
                     signer=_credential.signer,
                     service_account_email=_credential.service_account_email,
                     token_uri=token_uri if token_uri else DEFAULT_TOKEN_URI,
                     target_audience=target_audience,
                 )
-                self._id_token_credentials.refresh(request=request)
+                id_token_credentials.refresh(request=request)
 
-            return (self._id_token_credentials, request)
+                self._cache_id_token_credentials[target_audience] = id_token_credentials
+
+            return (id_token_credentials, request)
         except ServiceAccountConfigurationError:
             raise
         except RuntimeError as e:
