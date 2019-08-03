@@ -68,7 +68,7 @@ class EntityKeyGenerator:
         return s.replace('======', '').lower()
 
     def _generate_str_long(self) -> str:
-        return uuid.uuid4().bytes.decode('utf-8')
+        return str(uuid.uuid4())
 
     def _generate_int(self, incomplete_key: IncompleteKey) -> int:
         key = self._id_allocator.allocate(incomplete_key=incomplete_key)
