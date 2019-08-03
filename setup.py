@@ -2,7 +2,7 @@ import setuptools
 
 
 name = 'gumo-core'
-version = '0.1.1'
+version = '0.1.2a0'
 description = 'Gumo Core Library'
 dependencies = [
     'pyyaml >= 5.1',
