@@ -54,8 +54,7 @@ class _GoogleCredentialManagerForServiceAccountCredential:
         return google.auth.transport.requests.Request()
 
     def _fetch_id_token_credentials(self, target_audience: str) -> Optional[IDTokenCredentials]:
-        if target_audience in self._cache_id_token_credentials:
-            return self._cache_id_token_credentials.get(target_audience)
+        return self._cache_id_token_credentials.get(target_audience)
 
     def build_id_token_credentials(
             self,
@@ -101,7 +100,7 @@ class _GoogleCredentialManagerForServiceAccountCredential:
 class _GoogleCredentialManagerForComputeEngine:
     def __init__(self):
         self._credentials: Optional[Credentials] = None
-        self._id_token_credentials: Optional[IDTokenCredentials] = None
+        self._cache_id_token_credentials = {}
 
     def _build_request(self) -> Request:
         return google.auth.transport.requests.Request()
@@ -120,15 +119,19 @@ class _GoogleCredentialManagerForComputeEngine:
         except RuntimeError as e:
             raise ServiceAccountConfigurationError(e)
 
+    def _fetch_id_token_credentials(self, target_audience: str) -> Optional[IDTokenCredentials]:
+        return self._cache_id_token_credentials.get(target_audience)
+
     def build_id_token_credentials(
             self,
             target_audience: str,
             token_uri: Optional[str] = None,
     ) -> Tuple[IDTokenCredentials, Request]:
         request = self._build_request()
+        id_token_credentials = self._fetch_id_token_credentials(target_audience=target_audience)
 
         try:
-            if not self._id_token_credentials or not self._id_token_credentials.valid:
+            if not id_token_credentials or not id_token_credentials.valid:
                 logger.debug('Fetch compute_engine.IDTokenCredentials and token refresh.')
 
                 self._id_token_credentials = compute_engine.IDTokenCredentials(
@@ -136,14 +139,16 @@ class _GoogleCredentialManagerForComputeEngine:
                     target_audience=target_audience,
                     token_uri=token_uri if token_uri else DEFAULT_TOKEN_URI,
                 )
-                self._id_token_credentials.refresh(request=request)
+                id_token_credentials.refresh(request=request)
+
+                self._cache_id_token_credentials[target_audience] = id_token_credentials
 
         except ServiceAccountConfigurationError:
             raise
         except RuntimeError as e:
             raise ServiceAccountConfigurationError(e)
 
-        return (self._id_token_credentials, request)
+        return (id_token_credentials, request)
 
 
 class GoogleOAuthCredentialManager:
