@@ -160,7 +160,7 @@ class GoogleOAuthCredentialManager:
             gumo_configuration: GumoConfiguration,
     ):
         self._gumo_configuration = gumo_configuration
-        if self._gumo_configuration.is_google_app_engine:
+        if self._gumo_configuration.is_google_platform:
             self._manager = _GoogleCredentialManagerForComputeEngine()
         elif self._gumo_configuration.is_local:
             self._manager = _GoogleCredentialManagerForServiceAccountCredential(

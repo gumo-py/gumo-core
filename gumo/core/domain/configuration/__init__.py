@@ -14,3 +14,4 @@ class GoogleCloudProjectID:
 class ApplicationPlatform(enum.Enum):
     Local = 'local'
     GoogleAppEngine = 'google-app-engine'
+    GoogleComputeEngine = 'google-compute-engine'
