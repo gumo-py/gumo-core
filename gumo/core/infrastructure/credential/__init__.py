@@ -160,12 +160,12 @@ class GoogleOAuthCredentialManager:
             gumo_configuration: GumoConfiguration,
     ):
         self._gumo_configuration = gumo_configuration
-        if self._gumo_configuration.is_google_platform:
-            self._manager = _GoogleCredentialManagerForComputeEngine()
-        elif self._gumo_configuration.is_local:
+        if self._ENV_KEY_GOOGLE_APPLICATION_CREDENTIALS in os.environ:
             self._manager = _GoogleCredentialManagerForServiceAccountCredential(
                 credential_file_path=os.environ.get(self._ENV_KEY_GOOGLE_APPLICATION_CREDENTIALS)
             )
+        elif self._gumo_configuration.is_google_platform:
+            self._manager = _GoogleCredentialManagerForComputeEngine()
         else:
             raise RuntimeError(f'Unknown Platform configuration of GumoConfiguration.')
 
