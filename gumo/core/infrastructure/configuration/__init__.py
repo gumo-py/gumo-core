@@ -38,16 +38,27 @@ class GumoConfiguration:
                 raise RuntimeError(f'Env-var "{self._ENV_KEY_GOOGLE_CLOUD_PROJECT}" is undefined, please set it.')
 
     def _set_application_platform(self):
-        is_google_platform = 'GAE_DEPLOYMENT_ID' in os.environ and 'GAE_INSTANCE' in os.environ
-        if is_google_platform:
+        is_google_app_engine = 'GAE_DEPLOYMENT_ID' in os.environ and 'GAE_INSTANCE' in os.environ
+        is_google_compute_engine = 'COMPUTE_ENGINE' in os.environ
+        if is_google_app_engine:
             self.application_platform = ApplicationPlatform.GoogleAppEngine
+        elif is_google_compute_engine:
+            self.application_platform = ApplicationPlatform.GoogleComputeEngine
         else:
             self.application_platform = ApplicationPlatform.Local
 
     @property
     def is_local(self) -> bool:
-        return self.application_platform == self.application_platform.Local
+        return self.application_platform == ApplicationPlatform.Local
 
     @property
     def is_google_app_engine(self) -> bool:
-        return self.application_platform == self.application_platform.GoogleAppEngine
+        return self.application_platform == ApplicationPlatform.GoogleAppEngine
+
+    @property
+    def is_google_compute_engine(self) -> bool:
+        return self.application_platform == ApplicationPlatform.GoogleComputeEngine
+
+    @property
+    def is_google_platform(self) -> bool:
+        return self.is_google_app_engine or self.is_google_compute_engine
