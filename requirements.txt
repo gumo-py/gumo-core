@@ -7,13 +7,13 @@
 cachetools==3.1.1         # via google-auth
 certifi==2019.3.9         # via requests
 chardet==3.0.4            # via requests
-google-api-core==1.11.0   # via google-cloud-core, google-cloud-storage
+google-api-core==1.15.0   # via google-cloud-core
 google-api-python-client==1.7.9
 google-auth-httplib2==0.0.3  # via google-api-python-client
-google-auth==1.6.3        # via google-api-core, google-api-python-client, google-auth-httplib2, google-cloud-storage
-google-cloud-core==1.0.0  # via google-cloud-storage
-google-cloud-storage==1.16.0
-google-resumable-media==0.3.2  # via google-cloud-storage
+google-auth==1.10.0       # via google-api-core, google-api-python-client, google-auth-httplib2, google-cloud-storage
+google-cloud-core==1.1.0  # via google-cloud-storage
+google-cloud-storage==1.24.1
+google-resumable-media==0.5.0  # via google-cloud-storage
 googleapis-common-protos==1.6.0  # via google-api-core
 httplib2==0.12.3          # via google-api-python-client, google-auth-httplib2
 idna==2.8                 # via requests
@@ -30,4 +30,4 @@ uritemplate==3.0.0        # via google-api-python-client
 urllib3==1.25.3           # via requests
 
 # The following packages are considered to be unsafe in a requirements file:
-# setuptools==41.1.0        # via google-api-core, protobuf
+# setuptools
