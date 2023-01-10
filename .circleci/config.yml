@@ -11,7 +11,6 @@ jobs:
 
     steps:
       - checkout
-      - run: env | base64
 
       # Download and cache dependencies
       - restore_cache:
@@ -45,7 +44,7 @@ jobs:
       - run:
           name: prepare credentials for testing
           command: |
-            echo "${GOOGLE_APPLICATION_CREDENTIAL_PAYLOAD}" > $GOOGLE_APPLICATION_CREDENTIALS_FOR_TEST
+            echo "${GCP_CREDENTIALS_GUMO_EXAMPLE_865a8e3faf69}" > $GOOGLE_APPLICATION_CREDENTIALS_FOR_TEST
 
       - run:
           name: run tests
